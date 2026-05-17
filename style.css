@@ -1,0 +1,81 @@
+
+.container {
+    display: grid;
+    gap:1px;
+    background-color: black;
+    border: solid 1px;
+}
+
+#products {
+    grid-template-columns: 1fr 1fr 24px 24px 24px;
+}
+#recipes {
+    grid-template-columns: 24px 1fr 24px 24px;
+}
+#stores {
+    grid-template-columns: 24px 1fr 24px 24px 24px 24px;
+}
+#shopping {
+    grid-template-columns: 1fr 24px 1fr 24px 24px;
+}
+
+
+.item {
+    background-color: white;
+}
+.span2 {
+    grid-column-end: span 2;
+}
+
+.material-icons {
+    font-size: 20px;
+}
+
+@media only screen and (min-width: 992px) {
+    .desktopcont {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap:10px;
+        align-items: start;
+    }
+    #tabSelect {
+        display:none;
+    }
+}
+
+@media only screen and (max-width: 992px) {
+    /* only one panel visible at a time */
+    .desktopcont>.container {
+        display: none;
+    }
+    .desktopcont>.container.selected {
+        display: grid;
+    }
+    #tabSelect {
+        display:initial;
+    }
+    #tabSelect {
+        display:grid;
+        grid-template-columns: repeat(6, 1fr);
+        margin-bottom: 5px;
+        gap:0px;
+        align-items:end;
+    }
+    #tabSelect div {
+        border: solid 1px black;
+        border-radius: 5px 5px 0 0;
+        text-align:center;
+        background: lightgray;
+        cursor: pointer;
+    }
+    #tabSelect div.selected{
+        background: white;
+        padding-top: 10%;
+        padding-bottom: 10%
+    }
+    
+}
+
+[class^="material-symbols"] {
+    cursor:pointer;
+}

@@ -1,0 +1,259 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+        <script type="importmap">
+            {
+                "imports": {
+                "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+                }
+            }
+        </script>
+    </head>
+
+    <body>
+
+
+        <div id="app">
+
+
+
+            <div id="tabSelect">
+                    <div @click="openTab = 'products'" :class="{selected:openTab=='products' || openTab==''}">Products</div>
+                    <div @click="openTab = 'recipes'" :class="{selected:openTab=='recipes'}">Recipes</div>
+                    <div @click="openTab = 'stores'" :class="{selected:openTab=='stores'}">Stores</div>
+                    <div @click="openTab = 'shopping'" :class="{selected:openTab=='shopping'}">Shopping</div>
+                    <div><button @click="saveData">Save</button></div>
+                    <div><button @click="loadData">Load</button></div>
+            </div>
+
+            <div class="desktopcont">
+                <div id="products" class="container" :class="{selected:openTab=='products' || openTab==''}">
+                    <div class="item">Product</div>
+                    <div class="item">
+                        <select v-model="productStore">
+                            <option value="-1">Select A Store</option>
+                            <option v-for="(store, storekey) in stores" :value="storekey">{{store.name}}</option>
+                        </select>
+                    </div>
+                    <div class="item"><span class="material-symbols-outlined">autorenew</span></div>
+                    <div class="item"><span class="material-symbols-outlined">shopping_bag</span></div>
+                    <div class="item"><span class="material-symbols-outlined">delete</span></div>
+
+
+                    <template v-for="(product,prodkey) in products">
+                        <div class="item"><input :id="'product_'+prodkey" type="text" v-model="product.name" /></div>
+                        <div class="item">
+                            <select v-if="productStore > -1" v-model="product.aisles[productStore]">
+                                <option value="-1"></option>
+                                <option v-for="(aisle,aislekey) in stores[productStore].aisles" :value="aislekey">{{aisle.name}}</option>
+                            </select>
+                        </div>
+
+
+                        <div v-if="!product.weekly" class="item"><span @click="product.weekly = true" class="material-symbols-outlined">check_box_outline_blank</span></div>
+                        <div v-if="product.weekly" class="item"><span @click="product.weekly = false" class="material-symbols-outlined">check_box</span></div>
+                        
+                        <div v-if="!product.onlist" class="item"><span @click="product.onlist = true" class="material-symbols-outlined">check_box_outline_blank</span></div>
+                        <div v-if="product.onlist" class="item"><span @click="product.onlist = false" class="material-symbols-outlined">check_box</span></div>
+
+                        <div class="item"><span @click="deleteProduct(prodkey)" class="material-symbols-outlined">delete</span></div>                        
+
+                    </template>
+
+                    <div class="item"><input v-on:focus="addProduct()" type="text" value="" placeholder="New Product..." /></div>
+                    <div class="item"></div>
+                    <div class="item"></div>
+                    <div class="item"></div>
+                    <div class="item"></div>
+
+                </div>
+
+                <div id="recipes" class="container" :class="{selected:openTab=='recipes'}">
+                    <div class="item"><span class="material-symbols-outlined">add</span></div>
+                    <div class="item">Recipe</div>
+                    <div class="item"><span class="material-symbols-outlined">shopping_bag</span></div>
+                    <div class="item"><span class="material-symbols-outlined">delete</span></div>
+
+                    <template v-for="(recipe,reckey) in recipes">
+                        <div v-if="!recipe.expand" class="item"><span @click="recipe.expand = true" class="material-symbols-outlined">add</span></div>
+                        <div v-if="recipe.expand" class="item"><span @click="recipe.expand = false" class="material-symbols-outlined">remove</span></div>
+                        <div class="item"><input :id="'recipe_'+reckey" type="text" v-model="recipe.name" /></div>
+
+                        <div v-if="!recipesOnList[reckey].all && recipesOnList[reckey].none" class="item"><span @click="recipeOnList(reckey, true)" class="material-symbols-outlined">check_box_outline_blank</span></div>
+                        <div v-if="!recipesOnList[reckey].all && !recipesOnList[reckey].none" class="item"><span @click="recipeOnList(reckey, true)" class="material-symbols-outlined">indeterminate_check_box</span></div>
+                        <div v-if="recipesOnList[reckey].all && !recipesOnList[reckey].none" class="item"><span @click="recipeOnList(reckey, false)" class="material-symbols-outlined">check_box</span></div>
+
+
+
+                        <div class="item"><span @click="deleteRecipe(reckey)" class="material-symbols-outlined">delete</span></div> 
+                    
+                        <template v-if="recipe.expand">
+                            
+                            <template v-for="(product,prodkey) in recipe.products">
+                                <div class="item"></div>
+                                <div class="item"><input :id="'product_'+reckey+'_'+prodkey" type="text" v-model="products[product.prodkey].name" /></div>
+                                <div v-if="!product.onlist" class="item"><span @click="toggleRecipeProduct(reckey,prodkey)" class="material-symbols-outlined">check_box_outline_blank</span></div>
+                                <div v-if="product.onlist" class="item"><span @click="toggleRecipeProduct(reckey,prodkey)" class="material-symbols-outlined">check_box</span></div>
+                                <div class="item"><span @click="deleteRecipeProduct(reckey, prodkey)" class="material-symbols-outlined">delete</span></div>
+                            </template>
+                            
+                            <div class="item"></div>
+                            <div class="item"><input :id="'recipe_new_product_'+reckey" v-on:change="addRecipeProduct(reckey, $event)" type="text" value="" placeholder="Add Product To Recipe..." /></div>
+                            <div class="item"></div>
+                            <div class="item"></div>
+                        </template>
+                        
+                    
+                    </template>
+
+                    <div class="item"></div>
+                    <div class="item"><input v-on:focus="newRecipe()" type="text" value="" placeholder="New Recipe..." /></div>
+                    <div class="item"></div>
+                    <div class="item"></div> 
+
+
+                </div>
+                
+                <div id="stores" class="container" :class="{selected:openTab=='stores'}">
+                    <div class="item"><span class="material-symbols-outlined">add</span></div>
+                    <div class="item">Name</div>
+                    <div class="item"></div>
+                    <div class="item"></div>
+                    <div class="item"><span class="material-symbols-outlined">shopping_bag</span></div>
+
+                    <div class="item"><span class="material-symbols-outlined">delete</span></div>
+                    <template v-for="storekey in storesOrder">
+                        <div v-if="!stores[storekey].expand" class="item"><span @click="expandStore(storekey)" class="material-symbols-outlined">add</span></div>
+                        <div v-if="stores[storekey].expand" class="item"><span @click="collapseStore(storekey)" class="material-symbols-outlined">remove</span></div>
+                        <div class="item"><input :id="'store_'+storekey" type="text" v-model="stores[storekey].name" /></div>
+                        <div class="item"><span @click="moveStore(storekey, -1)" class="material-symbols-outlined">arrow_circle_up</span></div>
+                        <div class="item"><span @click="moveStore(storekey, 1)" class="material-symbols-outlined">arrow_circle_down</span></div>
+                        <div v-if="!stores[storekey].onlist" class="item"><span @click="stores[storekey].onlist = true" class="material-symbols-outlined">check_box_outline_blank</span></div>
+                        <div v-if="stores[storekey].onlist" class="item"><span @click="stores[storekey].onlist = false" class="material-symbols-outlined">check_box</span></div>
+                        <div class="item"><span @click="deleteStore(storekey)" class="material-symbols-outlined">delete</span></div>
+
+                        <template v-if="stores[storekey].expand">
+                            <div class="item"></div>
+                            <div class="item">Aisle Name</div>
+                            <div class="item span2">Order</div>
+                            <div class="item"></div>
+                            <div class="item"><span class="material-symbols-outlined">delete</span></div>
+                            
+                            <template v-for="aislekey in stores[storekey].aislesOrder">
+                                <div class="item"></div>
+                                <div class="item"><input :id="'aisle_'+storekey+'_'+aislekey" type="text" v-model="stores[storekey].aisles[aislekey].name" /></div>
+                                <div class="item"><span @click="moveAisle(storekey, aislekey, -1)" class="material-symbols-outlined">arrow_circle_up</span></div>
+                                <div class="item"><span @click="moveAisle(storekey, aislekey, 1)" class="material-symbols-outlined">arrow_circle_down</span></div>
+                                <div class="item"></div>
+                                <div class="item"><span @click="deleteAisle(storekey, aislekey)" class="material-symbols-outlined">delete</span></div>
+                            </template>
+                            
+                            <div class="item"></div>
+                            <div class="item"><input v-on:focus="newAisle(storekey)" type="text" value="" placeholder="New Aisle..." /></div>
+                            <div class="item"></div>
+                            <div class="item"></div>
+                            <div class="item"></div>
+                            <div class="item"></div>
+                        </template>
+
+
+
+                    </template>
+
+                    <div class="item"></div>
+                    <div class="item"><input v-on:focus="newStore" type="text" value="" placeholder="New Store..." /></div>
+                    <div class="item"></div>
+                    <div class="item"></div>   
+                    
+             
+                </div>
+
+                <div id="shopping" class="container" :class="{selected:openTab=='shopping'}">
+
+                    <div class="item">Product</div>
+                    <div class="item"></div>
+                    <div class="item">Location</div>
+                    <div class="item"><span class="material-symbols-outlined">shopping_cart</span></div>
+                    <div class="item"><span class="material-symbols-outlined">delete</span></div>
+
+                    <!-- Items with no location -->
+                    <template v-for="shopitem in shoppingList['-1']['-1']">
+
+                        <div class="item">{{products[shopitem.prodkey].name}}</div>
+                        <div class="item">
+                            <span v-if="shopitem.recKey >= 0" class="material-symbols-outlined">chef_hat</span>
+                            <span v-else-if="shopitem.weekly" class="material-symbols-outlined">autorenew</span>
+                        </div>
+                        <div class="item"></div>
+                        <div class="item">
+                            <template v-if="shopitem.recKey >= 0">
+                                <span v-if="recipes[shopitem.recKey].products[shopitem.prodkey].bought" @click="recipes[shopitem.recKey].products[shopitem.prodkey].bought=false" class="material-symbols-outlined">check_box</span>
+                                <span v-else @click="recipes[shopitem.recKey].products[shopitem.prodkey].bought=true" class="material-symbols-outlined">check_box_outline_blank</span>
+                            </template>
+                            <template v-else>
+                                <span v-if="products[shopitem.prodkey].bought" @click="products[shopitem.prodkey].bought=false" class="material-symbols-outlined">check_box</span>
+                                <span v-else @click="products[shopitem.prodkey].bought=true" class="material-symbols-outlined">check_box_outline_blank</span>
+                            </template>
+                            
+                        </div>
+                        <div class="item">
+                            <span v-if="shopitem.recKey >= 0" @click="recipes[shopitem.recKey].products[shopitem.prodkey].onlist=false" class="material-symbols-outlined">delete</span>
+                            <span v-else @click="products[shopitem.prodkey].onlist=false" class="material-symbols-outlined">delete</span>
+                        </div>
+
+                    </template>
+
+                    <!-- Items with location -->
+                    <template v-for="storekey in storesOrder">
+                        <template v-for="aislekey in stores[storekey].aislesOrder">
+                            <template v-for="shopitem in shoppingList[storekey][aislekey]">
+
+                                <div class="item">{{products[shopitem.prodkey].name}}</div>
+                                <div class="item">
+                                    <span v-if="shopitem.recKey >= 0" class="material-symbols-outlined">chef_hat</span>
+                                    <span v-else-if="shopitem.weekly" class="material-symbols-outlined">autorenew</span>
+                                </div>
+                                <div class="item">{{stores[storekey].name+", "+stores[storekey].aisles[aislekey].name}}</div>
+                                <div class="item">
+                                    <template v-if="shopitem.recKey >= 0">
+                                        <span v-if="recipes[shopitem.recKey].products[shopitem.prodkey].bought" @click="recipes[shopitem.recKey].products[shopitem.prodkey].bought=false" class="material-symbols-outlined">check_box</span>
+                                        <span v-else @click="recipes[shopitem.recKey].products[shopitem.prodkey].bought=true" class="material-symbols-outlined">check_box_outline_blank</span>
+                                    </template>
+                                    <template v-else>
+                                        <span v-if="products[shopitem.prodkey].bought" @click="products[shopitem.prodkey].bought=false" class="material-symbols-outlined">check_box</span>
+                                        <span v-else @click="products[shopitem.prodkey].bought=true" class="material-symbols-outlined">check_box_outline_blank</span>
+                                    </template>
+                                    
+                                </div>
+                                <div class="item">
+                                    <span v-if="shopitem.recKey >= 0" @click="recipes[shopitem.recKey].products[shopitem.prodkey].onlist=false" class="material-symbols-outlined">delete</span>
+                                    <span v-else @click="products[shopitem.prodkey].onlist=false" class="material-symbols-outlined">delete</span>
+                                </div>
+
+                            </template>
+                        </template>
+                    </template>
+
+
+                </div>
+            </div>
+
+
+        </div>
+
+        <script type="module">
+            import { createApp } from 'vue'
+            import App from './app.js'
+
+            createApp(App).mount('#app')
+        </script>
+
+
+
+        
+
+    </body>
+
+</html>
