@@ -8,7 +8,10 @@ const CACHE_NAME = `period-tracker-${VERSION}`;
 const APP_STATIC_RESOURCES = [
   "./shopping.html",
   "./app.js",
-  "./style.css"
+  "./style.css",
+  "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0",
+  "manifest.json",
+  "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
 ];
 
 // On install, cache the static resources
