@@ -10,7 +10,7 @@ const APP_STATIC_RESOURCES = [
   "./app.js",
   "./style.css",
   "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0",
-  "manifest.json",
+  "./manifest.json",
   "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
 ];
 
