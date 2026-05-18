@@ -42,29 +42,25 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-// On fetch, intercept server requests
-// and respond with cached responses instead of going to network
-self.addEventListener("fetch", (event) => {
-    console.log('trying to fetch ', event.request.url);
-  // As a single page app, direct app to always go to cached home page.
-  if (event.request.mode === "navigate") {
-    event.respondWith(caches.match("./shopping.html"));
-    return;
+async function networkFirst(request) {
+  try {
+    const networkResponse = await fetch(request);
+    if (networkResponse.ok) {
+      const cache = await caches.open("CACHE_NAME");
+      cache.put(request, networkResponse.clone());
+    }
+    return networkResponse;
+  } catch (error) {
+    const cachedResponse = await caches.match(request);
+    return cachedResponse || Response.error();
   }
+}
 
-  // For all other requests, go to the cache first, and then the network.
-  event.respondWith(
-    (async () => {
-      const cache = await caches.open(CACHE_NAME);
-      const cachedResponse = await cache.match(event.request.url);
-      if (cachedResponse) {
-        // Return the cached response if it's available.
-        return cachedResponse;
-      }
-      // If resource isn't in the cache, return a 404.
-      return new Response(null, { status: 404 });
-    })(),
-  );
+self.addEventListener("fetch", (event) => {
+  const url = new URL(event.request.url);
+  if (url.pathname.match(/^\/inbox/)) {
+    event.respondWith(networkFirst(event.request));
+  }
 });
 
 if ("serviceWorker" in navigator) {
