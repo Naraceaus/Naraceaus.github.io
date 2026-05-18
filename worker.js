@@ -45,6 +45,7 @@ self.addEventListener("activate", (event) => {
 // On fetch, intercept server requests
 // and respond with cached responses instead of going to network
 self.addEventListener("fetch", (event) => {
+    console.log('trying to fetch ', event.request.url);
   // As a single page app, direct app to always go to cached home page.
   if (event.request.mode === "navigate") {
     event.respondWith(caches.match("./shopping.html"));
