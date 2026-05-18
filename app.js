@@ -21,6 +21,12 @@ export default {
         }
     },
     computed:{
+        storesOrderOnList() {
+            let _this = this;
+            return this.storesOrder.filter((element, index, array) => {
+                return _this.stores[element].onlist;
+            })
+        },
         productNameLookup() {
             let productNames = {};
             for (let prodkey in this.products) {
@@ -51,8 +57,8 @@ export default {
                 "-1":[]
             }};
             //prefill map so I don't have to check for blanks later
-            for (let stki in this.storesOrder) {
-                let storekey = this.storesOrder[stki];
+            for (let stki in this.storesOrderOnList) {
+                let storekey = this.storesOrderOnList[stki];
                 locToProductsMap[storekey] = {}
                 for (let aki in this.stores[storekey].aislesOrder) {
                     let aislekey = this.stores[storekey].aislesOrder[aki];
@@ -64,8 +70,8 @@ export default {
             for (let prodkey in this.products) {
                 if (this.products[prodkey].onlist) {
                     let added = false;
-                    for (let stki in this.storesOrder) {
-                        let storekey = this.storesOrder[stki];
+                    for (let stki in this.storesOrderOnList) {
+                        let storekey = this.storesOrderOnList[stki];
                         if (this.products[prodkey].aisles[storekey] >= 0) {
                             locToProductsMap[storekey][this.products[prodkey].aisles[storekey]].push({
                                 prodkey:prodkey,
@@ -99,8 +105,8 @@ export default {
                     this.products[prodkey];
                     if (recprod.onlist) {
                         let added = false;
-                        for (let stki in this.storesOrder) {
-                            let storekey = this.storesOrder[stki];                            
+                        for (let stki in this.storesOrderOnList) {
+                            let storekey = this.storesOrderOnList[stki];                            
                             if (this.products[prodkey].aisles[storekey] >= 0) {
                                 locToProductsMap[storekey][this.products[prodkey].aisles[storekey]].push({
                                     prodkey:prodkey,
@@ -129,8 +135,8 @@ export default {
             }
 
             // sort each aisle by name so duplicates clump together.
-            for (let stki in this.storesOrder) {
-                let storekey = this.storesOrder[stki];
+            for (let stki in this.storesOrderOnList) {
+                let storekey = this.storesOrderOnList[stki];
                 for (let aki in this.stores[storekey].aislesOrder) {
                     let aislekey = this.stores[storekey].aislesOrder[aki];
                     let _this = this;
