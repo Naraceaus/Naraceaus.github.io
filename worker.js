@@ -45,7 +45,7 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   // As a single page app, direct app to always go to cached home page.
   if (event.request.mode === "navigate") {
-    event.respondWith(caches.match("./"));
+    event.respondWith(caches.match("./shopping.html"));
     return;
   }
 
