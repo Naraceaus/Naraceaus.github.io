@@ -57,6 +57,7 @@ async function networkFirst(request) {
 }
 
 self.addEventListener("fetch", (event) => {
+    console.log("requesting ",event.request.url);
   const url = new URL(event.request.url);
   if (url.pathname.match(/^\/inbox/)) {
     event.respondWith(networkFirst(event.request));
