@@ -58,10 +58,8 @@ async function networkFirst(request) {
 
 self.addEventListener("fetch", (event) => {
     console.log("requesting ",event.request.url);
-  const url = new URL(event.request.url);
-  if (url.pathname.match(/^\/inbox/)) {
+    const url = new URL(event.request.url);
     event.respondWith(networkFirst(event.request));
-  }
 });
 
 if ("serviceWorker" in navigator) {
