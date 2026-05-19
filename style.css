@@ -2,8 +2,8 @@
 .container {
     display: grid;
     gap:5px;
-    border: solid 1px;
-    padding: 5px;
+
+    /*padding: 5px;*/
 }
 
 .container {
@@ -11,7 +11,7 @@
 }
 
 #products {
-    grid-template-columns: [col-start] 1fr 1fr 24px 24px 24px [col-end];
+    grid-template-columns: [col-start] 1fr 24px 1fr 24px 24px [col-end];
 }
 #recipes {
     grid-template-columns: [col-start] 24px 24px 1fr 24px 24px [col-end];
@@ -20,20 +20,41 @@
     grid-template-columns: [col-start] 24px 24px 1fr 24px 24px 24px 24px [col-end];
 }
 #shopping {
-    grid-template-columns: [col-start] 1fr 24px 1fr 24px 24px [col-end];
+    grid-template-columns: [col-start] 1fr 24px 24px 1fr 24px[col-end];
 }
 
 .aisles, .ingredients {
     display: grid;
     gap:5px;
-    grid-column: col-start / col-end;
+    grid-column: 2 / col-end;
     grid-template-columns: subgrid;
     background-color: lightgrey;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding: 5px 0px;
+}
+
+.grid-header {
+    display: grid;
+    gap:5px;
+    grid-column: col-start / col-end;
+    grid-template-columns: subgrid;
+    padding: 5px 0px;
+    position: sticky;
+    top:0px;
+    background: white;
+    align-items: center;
+    background: darkgray;
 }
 
 
+#products .item:nth-last-child(5n) {
+    padding-left:5px;
+}
+
+
+
+#shopping .item:nth-last-child(6n+5) {
+    padding-left:5px;
+}
 
 .item select {
     width: 100%;
@@ -72,9 +93,16 @@ button.material-symbols-outlined {
 }
 
 @media only screen and (max-width: 992px) {
+    /* 36px is height of tabSelect, 2px is because of the dektopcontborder */
+    .desktopcont {
+        height: calc(100% - 36px - 2px);
+        overflow-y: scroll;
+        border: solid 1px;
+    }
     /* only one panel visible at a time */
     .desktopcont>.container {
         display: none;
+        padding-top: 0;
     }
     .desktopcont>.container.selected {
         display: grid;
