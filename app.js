@@ -202,6 +202,8 @@ export default {
         },
         loadData(dataText) {
             if (dataText!= null) {
+
+                let tempBackup = this.saveDataString;
                 //wipe fields first
                 for (const field in saveFields) {
                     this[field] = JSON.parse(JSON.stringify(saveFields[field]));
@@ -217,6 +219,7 @@ export default {
                     }
                 } catch (error){
                     console.log(error);
+                    this.loadData(tempBackup);
                 }
             }
 
