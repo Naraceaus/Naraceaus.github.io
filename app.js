@@ -7,7 +7,8 @@ export default {
             recipes:{},
             stores:{},
             storesOrder:[],
-            inputFocus:""
+            inputFocus:"",
+            saveScheduled:undefined
         }
     },
     mounted() {
@@ -18,6 +19,8 @@ export default {
             document.getElementById(this.inputFocus).focus();
             this.inputFocus = "";
         }
+        clearTimeout(this.saveScheduled);
+        this.saveScheduled = setTimeout(this.saveData, 2000);
     },
     computed:{
         storesOrderOnList() {
@@ -165,6 +168,7 @@ export default {
                 data[field] = this[field];
             }
             localStorage.setItem("listData", JSON.stringify(data));
+            console.log('data saved');
         },
         loadData() {
             let dataText = localStorage.getItem("listData");
