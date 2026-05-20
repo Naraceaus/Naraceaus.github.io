@@ -28,8 +28,7 @@
                     <button @click="openTab = 'recipes'" :class="{selected:openTab=='recipes'}">Recipes</button>
                     <button @click="openTab = 'stores'" :class="{selected:openTab=='stores'}">Stores</button>
                     <button @click="openTab = 'shopping'" :class="{selected:openTab=='shopping'}">Shopping</button>
-                    <button @click="saveData">Save</button>
-                    <button @click="loadData">Load</button>
+                    <button @click="openTab = 'settings'" :class="{selected:openTab=='settings'}">Settings</button>
             </div>
 
             <div class="desktopcont">
@@ -265,7 +264,24 @@
 
 
                 </div>
+
+
+                <div id="settings" class="container" :class="{selected:openTab=='settings'}">
+                    <div>
+                        Paste your shopping list below and click <button @click="importShoppingList()">here</button>
+                        <textarea v-model="listimport"></textarea>
+                    </div>
+                    
+                    <hr>
+                    <div><button @click="downloadBackup()">Download Shopping List Backup</button></div>
+                    <hr>
+                    <div>
+                        <input ref="backupupload" @change="uploadBackup($event)" type="file" /><button @click="loadDataFromBackup" :disabled="uploadedBackup == ''">Restore Uploaded Backup</button>
+                    </div>
+                </div>
             </div>
+
+            
 
             <datalist id="product-suggestions">
                     <option v-for="(prodname,prodkey) in autofillList" >{{prodname}}</option>

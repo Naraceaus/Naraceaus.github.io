@@ -8,11 +8,13 @@ export default {
             stores:{},
             storesOrder:[],
             inputFocus:"",
-            saveScheduled:undefined
+            saveScheduled:undefined,
+            listimport:"",
+            uploadedBackup:""
         }
     },
     mounted() {
-        this.loadData();
+        this.loadFromLocalStorage();
     },
     updated() {
         if (this.inputFocus != "") {
@@ -159,23 +161,37 @@ export default {
                 autolist.push(this.products[prodkey].name.replace(/(^.)|( .)/g, x => x.toUpperCase()));
             }
             return autolist;
+        },
+        saveDataString() {
+            console.log('genning save data');
+            let data = {};
+            for (const field in saveFields) {
+                data[field] = this[field];
+            }
+            return JSON.stringify(data);
         }
     },
     methods: {
         saveData() {
-            let data = {};
-            for (const field of saveFields) {
-                data[field] = this[field];
-            }
-            localStorage.setItem("listData", JSON.stringify(data));
+
+            localStorage.setItem("listData", this.saveDataString);
             console.log('data saved');
         },
-        loadData() {
+        loadFromLocalStorage() {
             let dataText = localStorage.getItem("listData");
+            this.loadData(dataText);
+        },
+        loadData(dataText) {
             if (dataText!= null) {
+                //wipe fields first
+                for (const field in saveFields) {
+                    this[field] = JSON.parse(JSON.stringify(saveFields[field]));
+                }
+
+
                 try {
                     let data = JSON.parse(dataText);
-                    for (const field of saveFields) {
+                    for (const field in saveFields) {
                         if (data[field] != undefined) {
                             this[field] = data[field];
                         }
@@ -183,6 +199,46 @@ export default {
                 } catch (error){
                     console.log(error);
                 }
+            }
+
+
+        },
+        loadDataFromBackup() {
+            this.loadData(this.uploadedBackup);
+
+            if (this.$refs.backupupload) {
+                this.$refs.backupupload.value = "";
+            }
+            this.uploadedBackup = "";
+            this.openTab = '';
+        },
+        downloadBackup() {
+            let json = this.saveDataString;
+            const blob = new Blob([json], { type: 'text/json' })
+            const url = window.URL.createObjectURL(blob)
+
+            const link = document.createElement('a')
+            link.href = url
+            link.download = 'shoppinglistbackup.json'
+            link.click()
+
+            window.URL.revokeObjectURL(url)
+
+            link.remove();
+        },
+        uploadBackup(event) {
+            console.log(event);
+            const reader = new FileReader();
+            let _this = this;
+            reader.addEventListener("load", () => {
+                // this will then display a text file
+                _this.uploadedBackup = reader.result;
+            });
+
+            if (event.target.files[0]) {
+                reader.readAsText(event.target.files[0]);
+            } else {
+                this.uploadedBackup = "";
             }
         },
         newStore() {
@@ -362,22 +418,55 @@ export default {
             this.recipes[reckey].products[prodkey].onlist = !this.recipes[reckey].products[prodkey].onlist;
         },
         recipeOnList(reckey, onlist) {
-            for (let prodkey in this.recipes[reckey].products) {
-                this.recipes[reckey].products[prodkey].onlist = onlist;
+            for (let recprodkey in this.recipes[reckey].products) {
+                this.recipes[reckey].products[recprodkey].onlist = onlist;
             }
+        },
+        clearShoppingList() {
+            //clear recipe products
+            for (let reckey in this.recipes) {
+                for (let recprodkey in this.recipes[reckey].products) {
+                    this.recipes[reckey].products[recprodkey].onlist = false;
+                }
+            }
+
+            //clear products
+            for (let prodkey in this.products) {
+                this.products[prodkey].onlist = false;
+            }
+        
+        },
+        importShoppingList() {
+            this.clearShoppingList();
+            let importArray = this.listimport.split(/\r\n|\r|\n/g);
+            for (let impkey in importArray) {
+                
+                if (importArray[impkey] != "") {
+                    this.addProductToListByName(importArray[impkey]);
+                }
+            }
+            this.listimport = "";
+        },
+        addProductToListByName(name) {
+            let prodID = this.addProduct(name,false);
+            this.products[prodID].onlist = true;
         }
     }
 }
 
-const saveFields = [
-    "openTab",
-    "productStore",
-    "products",
-    "recipes",
-    "stores",
-    "storesOrder",
-    "inputFocus"
-];
+
+
+
+
+const saveFields = {
+    openTab:'',
+    productStore:-1,
+    products:{},
+    recipes:{},
+    stores:{},
+    storesOrder:[],
+    inputFocus:"",
+};
 
 function sortAlphabetical(a,b) {
     const nameA = a.toUpperCase(); // ignore upper and lowercase
