@@ -149,6 +149,13 @@ export default {
             return locToProductsMap;
 
 
+        },
+        autofillList() {
+            let autolist = [];
+            for (let prodkey in this.products) {
+                autolist.push(this.products[prodkey].name.replace(/(^.)|( .)/g, x => x.toUpperCase()));
+            }
+            return autolist;
         }
     },
     methods: {
