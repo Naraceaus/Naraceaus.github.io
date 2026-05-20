@@ -88,9 +88,9 @@
                             <div v-if="recipe.expand" class="item"><span @click="recipe.expand = false" class="material-symbols-outlined">remove</span></div>
                             <div class="item span2"><input :id="'recipe_'+reckey" type="text" v-model="recipe.name" /></div>
 
-                            <div v-if="!recipesOnList[reckey].all && recipesOnList[reckey].none" class="item"><span @click="recipeOnList(reckey, true)" class="material-symbols-outlined">check_box_outline_blank</span></div>
-                            <div v-if="!recipesOnList[reckey].all && !recipesOnList[reckey].none" class="item"><span @click="recipeOnList(reckey, true)" class="material-symbols-outlined">indeterminate_check_box</span></div>
-                            <div v-if="recipesOnList[reckey].all && !recipesOnList[reckey].none" class="item"><span @click="recipeOnList(reckey, false)" class="material-symbols-outlined">check_box</span></div>
+                            <div v-if="!recipesOnList[reckey].all && recipesOnList[reckey].none" class="item"><button @click="recipeOnList(reckey, true)" class="material-symbols-outlined">check_box_outline_blank</button></div>
+                            <div v-if="!recipesOnList[reckey].all && !recipesOnList[reckey].none" class="item"><button @click="recipeOnList(reckey, true)" class="material-symbols-outlined">indeterminate_check_box</button></div>
+                            <div v-if="recipesOnList[reckey].all && !recipesOnList[reckey].none" class="item"><button @click="recipeOnList(reckey, false)" class="material-symbols-outlined">check_box</button></div>
 
 
 
@@ -102,9 +102,9 @@
                                     <template v-for="(product,prodkey) in recipe.products">
                                         <div class="item"></div>
                                         <div class="item"><input :id="'product_'+reckey+'_'+prodkey" type="text" v-model="products[product.prodkey].name" /></div>
-                                        <div v-if="!product.onlist" class="item"><span @click="toggleRecipeProduct(reckey,prodkey)" class="material-symbols-outlined">check_box_outline_blank</span></div>
-                                        <div v-if="product.onlist" class="item"><span @click="toggleRecipeProduct(reckey,prodkey)" class="material-symbols-outlined">check_box</span></div>
-                                        <div class="item"><span @click="deleteRecipeProduct(reckey, prodkey)" class="material-symbols-outlined">delete</span></div>
+                                        <div v-if="!product.onlist" class="item"><button @click="toggleRecipeProduct(reckey,prodkey)" class="material-symbols-outlined">check_box_outline_blank</button></div>
+                                        <div v-if="product.onlist" class="item"><button @click="toggleRecipeProduct(reckey,prodkey)" class="material-symbols-outlined">check_box</button></div>
+                                        <div class="item"><button @click="deleteRecipeProduct(reckey, prodkey)" class="material-symbols-outlined">delete</button></div>
                                     </template>
                                     
                                     <div class="item"></div>
