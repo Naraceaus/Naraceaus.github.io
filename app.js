@@ -96,7 +96,7 @@ export default {
                 }
             }
 
-            //add recipe products to shipping list
+            //add recipe products to shopping list
             for (let reckey in this.recipes) {
                 for (let recprodkey in this.recipes[reckey].products) {
                     let recprod = this.recipes[reckey].products[recprodkey];
@@ -267,18 +267,40 @@ export default {
 
             
         },
-        deleteProduct(prodid) {
+        deleteProduct(prodid, altid = "") {
             //todo delete product from recipes
             for (let reckey in this.recipes) {
 
-                for (let prodkey in this.recipes[reckey].products) {
-                    if (this.recipes[reckey].products[prodkey].prodkey == prodid) {
-                        delete this.recipes[reckey].products[prodkey];
+                for (let recprodkey in this.recipes[reckey].products) {
+                    if (this.recipes[reckey].products[recprodkey].prodkey == prodid) {
+                        if (altid != "") {
+                            this.recipes[reckey].products[recprodkey].prodkey = altid;
+                        } else {
+                            delete this.recipes[reckey].products[recprodkey];
+                        }
+                        
                     }
                 }
             }
 
             delete this.products[prodid];
+        },
+        // whenever a product name is changed we have to check if it matches another product already and merge them
+        removeDuplicateProduct(prodid) {
+            let name = this.products[prodid].name.toLowerCase();
+            let dupProdIDs = [];
+
+            for (let prodkey in this.products) {
+                if (name == this.products[prodkey].name.toLowerCase()) {
+                    dupProdIDs.push(prodkey);
+                }
+            }
+
+            let originalID = dupProdIDs[0];
+            for (let i = 1; i < dupProdIDs.length; i++) {
+                //change product links for recipes
+                this.deleteProduct(dupProdIDs[i],originalID);
+            }
         },
         newRecipe() {
             let newID = Math.max.apply(null,Object.keys(this.recipes).concat([-1]))+1;
@@ -292,22 +314,33 @@ export default {
         deleteRecipe(reckey) {
             delete this.recipes[reckey];
         },
-        addRecipeProduct(reckey, event) {
+        addRecipeProduct(reckey, event, oldreckprodkey="") {
             let prodName = event.target.value;
 
             if (prodName != "") {
+
                 let productID = this.addProduct(prodName, false);
 
-                let newID = Math.max.apply(null,Object.keys(this.recipes[reckey].products).concat([-1]))+1;
-                this.recipes[reckey].products[newID] = {
-                    prodkey:productID,
-                    onlist:false,
-                    bought:false
-                }   
+
+                if (oldreckprodkey != "") {
+                    //update existing recipe product to link to different product (either existing or made on the fly)
+                    let productID = this.addProduct(prodName, false);
+                    this.recipes[reckey].products[oldreckprodkey].prodkey = productID;
+                } else {
+                    // make new record with relevant product
+                    let newID = Math.max.apply(null,Object.keys(this.recipes[reckey].products).concat([-1]))+1;
+                    this.recipes[reckey].products[newID] = {
+                        prodkey:productID,
+                        onlist:false,
+                        bought:false
+                    }
+
+                    // auto focus to new rec product if this was a new rec product
+                    event.target.value = "";
+                    this.inputFocus = "recipe_new_product_"+reckey;
+                }
 
 
-                event.target.value = "";
-                this.inputFocus = "recipe_new_product_"+reckey;
             }
 
         },

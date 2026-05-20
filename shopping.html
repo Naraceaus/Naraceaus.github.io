@@ -49,7 +49,7 @@
 
 
                     <template v-for="(product,prodkey) in products">
-                        <div class="item"><input :id="'product_'+prodkey" type="text" v-model="product.name" /></div>
+                        <div class="item"><input  @change="removeDuplicateProduct(prodkey)" :id="'product_'+prodkey" type="text" v-model="product.name" /></div>
                         <div class="item"><span @click="deleteProduct(prodkey)" class="material-symbols-outlined">delete</span></div>                        
                         <div class="item">
                             <select v-if="productStore > -1" v-model="product.aisles[productStore]">
@@ -100,12 +100,12 @@
                             <template v-if="recipe.expand">
                                 
                                 <div class="ingredients">
-                                    <template v-for="(product,prodkey) in recipe.products">
+                                    <template v-for="(product,recprodkey) in recipe.products">
                                         <div class="item"></div>
-                                        <div class="item"><input list="product-suggestions" :id="'product_'+reckey+'_'+prodkey" type="text" v-model="products[product.prodkey].name" /></div>
-                                        <div v-if="!product.onlist" class="item"><button @click="toggleRecipeProduct(reckey,prodkey)" class="material-symbols-outlined">check_box_outline_blank</button></div>
-                                        <div v-if="product.onlist" class="item"><button @click="toggleRecipeProduct(reckey,prodkey)" class="material-symbols-outlined">check_box</button></div>
-                                        <div class="item"><button @click="deleteRecipeProduct(reckey, prodkey)" class="material-symbols-outlined">delete</button></div>
+                                        <div class="item"><input @change="addRecipeProduct(reckey, $event,recprodkey)" list="product-suggestions" :id="'product_'+reckey+'_'+recprodkey" type="text" :value="products[product.prodkey].name" /></div>
+                                        <div v-if="!product.onlist" class="item"><button @click="toggleRecipeProduct(reckey,recprodkey)" class="material-symbols-outlined">check_box_outline_blank</button></div>
+                                        <div v-if="product.onlist" class="item"><button @click="toggleRecipeProduct(reckey,recprodkey)" class="material-symbols-outlined">check_box</button></div>
+                                        <div class="item"><button @click="deleteRecipeProduct(reckey, recprodkey)" class="material-symbols-outlined">delete</button></div>
                                     </template>
                                     
                                     <div class="item"></div>
