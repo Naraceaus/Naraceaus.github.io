@@ -146,6 +146,8 @@ export default {
                 }
             }
 
+            console.log('boop');
+            console.log(locToProductsMap);
 
             return locToProductsMap;
 

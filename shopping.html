@@ -210,14 +210,14 @@
                             <span v-else-if="shopitem.weekly" class="material-symbols-outlined">autorenew</span>
                         </div>
                         <div class="item">
-                            <span v-if="shopitem.recKey >= 0" @click="recipes[shopitem.recKey].products[shopitem.prodkey].onlist=false" class="material-symbols-outlined">delete</span>
+                            <span v-if="shopitem.recKey >= 0" @click="recipes[shopitem.recKey].products[shopitem.recprodkey].onlist=false" class="material-symbols-outlined">delete</span>
                             <span v-else @click="products[shopitem.prodkey].onlist=false" class="material-symbols-outlined">delete</span>
                         </div>
                         <div class="item"></div>
                         <div class="item">
                             <template v-if="shopitem.recKey >= 0">
-                                <span v-if="recipes[shopitem.recKey].products[shopitem.prodkey].bought" @click="recipes[shopitem.recKey].products[shopitem.prodkey].bought=false" class="material-symbols-outlined">check_box</span>
-                                <span v-else @click="recipes[shopitem.recKey].products[shopitem.prodkey].bought=true" class="material-symbols-outlined">check_box_outline_blank</span>
+                                <span v-if="recipes[shopitem.recKey].products[shopitem.recprodkey].bought" @click="recipes[shopitem.recKey].products[shopitem.recprodkey].bought=false" class="material-symbols-outlined">check_box</span>
+                                <span v-else @click="recipes[shopitem.recKey].products[shopitem.recprodkey].bought=true" class="material-symbols-outlined">check_box_outline_blank</span>
                             </template>
                             <template v-else>
                                 <span v-if="products[shopitem.prodkey].bought" @click="products[shopitem.prodkey].bought=false" class="material-symbols-outlined">check_box</span>
@@ -241,14 +241,14 @@
                                     <span v-else-if="shopitem.weekly" class="material-symbols-outlined">autorenew</span>
                                 </div>
                                 <div class="item">
-                                    <span v-if="shopitem.recKey >= 0" @click="recipes[shopitem.recKey].products[shopitem.prodkey].onlist=false" class="material-symbols-outlined">delete</span>
+                                    <span v-if="shopitem.recKey >= 0" @click="recipes[shopitem.recKey].products[shopitem.recprodkey].onlist=false" class="material-symbols-outlined">delete</span>
                                     <span v-else @click="products[shopitem.prodkey].onlist=false" class="material-symbols-outlined">delete</span>
                                 </div>
                                 <div class="item">{{stores[storekey].name+", "+stores[storekey].aisles[aislekey].name}}</div>
                                 <div class="item">
                                     <template v-if="shopitem.recKey >= 0">
-                                        <span v-if="recipes[shopitem.recKey].products[shopitem.prodkey].bought" @click="recipes[shopitem.recKey].products[shopitem.prodkey].bought=false" class="material-symbols-outlined">check_box</span>
-                                        <span v-else @click="recipes[shopitem.recKey].products[shopitem.prodkey].bought=true" class="material-symbols-outlined">check_box_outline_blank</span>
+                                        <span v-if="recipes[shopitem.recKey].products[shopitem.recprodkey].bought" @click="recipes[shopitem.recKey].products[shopitem.prodkey].bought=false" class="material-symbols-outlined">check_box</span>
+                                        <span v-else @click="recipes[shopitem.recKey].products[shopitem.recprodkey].bought=true" class="material-symbols-outlined">check_box_outline_blank</span>
                                     </template>
                                     <template v-else>
                                         <span v-if="products[shopitem.prodkey].bought" @click="products[shopitem.prodkey].bought=false" class="material-symbols-outlined">check_box</span>
