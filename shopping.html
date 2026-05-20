@@ -21,8 +21,6 @@
 
         <div id="app">
 
-
-
             <div id="tabSelect">
                     <button @click="openTab = 'products'" :class="{selected:openTab=='products' || openTab==''}">Products</button>
                     <button @click="openTab = 'recipes'" :class="{selected:openTab=='recipes'}">Recipes</button>
@@ -273,7 +271,7 @@
                     </div>
                     
                     <hr>
-                    <div><button @click="downloadBackup()">Download Shopping List Backup</button></div>
+                    <div><a download="shoppinglistbackup.json" :href="backupURL">Download Shopping List Backup</a></div>
                     <hr>
                     <div>
                         <input ref="backupupload" @change="uploadBackup($event)" type="file" /><button @click="loadDataFromBackup" :disabled="uploadedBackup == ''">Restore Uploaded Backup</button>

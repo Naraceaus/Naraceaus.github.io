@@ -169,6 +169,25 @@ export default {
                 data[field] = this[field];
             }
             return JSON.stringify(data);
+        },
+        backupURL(_,oldURL) {
+            if  (oldURL) {
+                window.URL.revokeObjectURL(oldURL);
+            }
+
+            let json = this.saveDataString;
+            const blob = new Blob([json], { type: 'text/json' });
+            const url = window.URL.createObjectURL(blob);
+/*
+            const link = document.createElement('a')
+            link.href = url
+            link.click()
+
+            window.URL.revokeObjectURL(url)
+
+            link.remove();
+*/
+            return url;
         }
     },
     methods: {
@@ -211,20 +230,6 @@ export default {
             }
             this.uploadedBackup = "";
             this.openTab = '';
-        },
-        downloadBackup() {
-            let json = this.saveDataString;
-            const blob = new Blob([json], { type: 'text/json' })
-            const url = window.URL.createObjectURL(blob)
-
-            const link = document.createElement('a')
-            link.href = url
-            link.download = 'shoppinglistbackup.json'
-            link.click()
-
-            window.URL.revokeObjectURL(url)
-
-            link.remove();
         },
         uploadBackup(event) {
             console.log(event);
