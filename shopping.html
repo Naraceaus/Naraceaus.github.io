@@ -5,6 +5,7 @@
         <link rel="stylesheet" href="style.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
         <link rel="manifest" href="manifest.json" />
+        <link rel="icon" type="image/x-icon" href="/icons/favicon.png">
 
         <script type="importmap">
             {
@@ -101,14 +102,14 @@
                                 <div class="ingredients">
                                     <template v-for="(product,prodkey) in recipe.products">
                                         <div class="item"></div>
-                                        <div class="item"><input :id="'product_'+reckey+'_'+prodkey" type="text" v-model="products[product.prodkey].name" /></div>
+                                        <div class="item"><input list="product-suggestions" :id="'product_'+reckey+'_'+prodkey" type="text" v-model="products[product.prodkey].name" /></div>
                                         <div v-if="!product.onlist" class="item"><button @click="toggleRecipeProduct(reckey,prodkey)" class="material-symbols-outlined">check_box_outline_blank</button></div>
                                         <div v-if="product.onlist" class="item"><button @click="toggleRecipeProduct(reckey,prodkey)" class="material-symbols-outlined">check_box</button></div>
                                         <div class="item"><button @click="deleteRecipeProduct(reckey, prodkey)" class="material-symbols-outlined">delete</button></div>
                                     </template>
                                     
                                     <div class="item"></div>
-                                    <div class="item"><input :id="'recipe_new_product_'+reckey" v-on:change="addRecipeProduct(reckey, $event)" type="text" value="" placeholder="Add Product To Recipe..." /></div>
+                                    <div class="item"><input list="product-suggestions" :id="'recipe_new_product_'+reckey" v-on:change="addRecipeProduct(reckey, $event)" type="text" value="" placeholder="Add Product To Recipe..." /></div>
                                     <div class="item"></div>
                                     <div class="item"></div>
                                 </div>
@@ -266,6 +267,9 @@
                 </div>
             </div>
 
+            <datalist id="product-suggestions">
+                    <option v-for="(product,prodkey) in products" >{{product.name}}</option>
+            </datalist>
 
         </div>
 

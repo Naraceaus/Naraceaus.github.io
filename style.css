@@ -60,9 +60,13 @@
     width: 100%;
     height: 100%;
 }
+datalist option {
+        text-transform: capitalize;
+}
 .item input {
     width: 100%;
     height: 100%;
+    text-transform: capitalize;
 }
 .span2 {
     grid-column-end: span 2;

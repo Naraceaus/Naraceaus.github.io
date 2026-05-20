@@ -12,7 +12,6 @@ export default {
     },
     mounted() {
         this.loadData();
-
     },
     updated() {
         if (this.inputFocus != "") {
@@ -30,7 +29,7 @@ export default {
         productNameLookup() {
             let productNames = {};
             for (let prodkey in this.products) {
-                productNames[this.products[prodkey].name] = prodkey;
+                productNames[this.products[prodkey].name.toLowerCase()] = prodkey;
             }
             return productNames;
         },
@@ -146,8 +145,6 @@ export default {
                 }
             }
 
-            console.log('boop');
-            console.log(locToProductsMap);
 
             return locToProductsMap;
 
@@ -243,19 +240,31 @@ export default {
             }
         },
         addProduct(name="",autofocus = true) {
-            let newID = Math.max.apply(null,Object.keys(this.products).concat([-1]))+1;
-            this.products[newID] = {
-                name:name,
-                aisles:{},
-                weekly:false,
-                onlist:false,
-                bought:false
-            }
-            if (autofocus) {
-                this.inputFocus = "product_"+newID;
-            }
+            let newID = this.productNameLookup[name.toLowerCase()];
+            if (newID == undefined) {
+                newID = Math.max.apply(null,Object.keys(this.products).concat([-1]))+1;
+                this.products[newID] = {
+                    name:name.toLowerCase(),
+                    aisles:{},
+                    weekly:false,
+                    onlist:false,
+                    bought:false
+                }
+                if (autofocus) {
+                    this.inputFocus = "product_"+newID;
+                }
 
+                
+            } else {
+                if (autofocus) {
+                    // already have blank name product so autofocus to that blank input
+                    document.getElementById("product_"+newID).focus();
+                }
+
+            }
             return newID;
+
+
             
         },
         deleteProduct(prodid) {
@@ -284,14 +293,10 @@ export default {
             delete this.recipes[reckey];
         },
         addRecipeProduct(reckey, event) {
-            let productID = -1;
             let prodName = event.target.value;
+
             if (prodName != "") {
-                if (this.productNameLookup[prodName] !== undefined) {
-                    productID = this.productNameLookup[prodName];
-                } else {
-                    productID = this.addProduct(prodName, false);
-                }
+                let productID = this.addProduct(prodName, false);
 
                 let newID = Math.max.apply(null,Object.keys(this.recipes[reckey].products).concat([-1]))+1;
                 this.recipes[reckey].products[newID] = {
