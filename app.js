@@ -522,7 +522,7 @@ export default {
         checkForMobileKeyboard(event) {
             if (window.innerHeight < this.pastHeight) {
                 this.keyboardPadding = this.pastMaxHeight - window.innerHeight;
-                document.querySelector('html').style.marginBottom = this.keyboardPadding+"px";
+                //document.querySelector('html').style.marginBottom = this.keyboardPadding+"px";
                 
             } 
             
