@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
     <head>
         
@@ -32,14 +33,14 @@
                 <div id="products" class="container" :class="{selected:openTab=='products' || openTab==''}">
                     <div class="grid-header">
                         <div class="item">Sort by
-                            <select class="sortSelect" v-model="selectedSort">
+                            <select id="selectSort" class="sortSelect" v-model="selectedSort">
                                 <option v-for="(sort, sortkey) in productSortList" :value="sortkey">{{sortkey}}</option>
                             </select>
 
                         </div>
                         <div class="item"><span class="material-symbols-outlined">delete</span></div>
                         <div class="item">
-                            <select v-model="productStore">
+                            <select id="selectStore" v-model="productStore">
                                 <option value="-1">Select A Store</option>
                                 <option v-for="(store, storekey) in stores" :value="storekey">{{store.name}}</option>
                             </select>
@@ -53,7 +54,7 @@
                         <div class="item"><input  @change="removeDuplicateProduct(prodkey)" :id="'product_'+prodkey" type="text" v-model.lazy="products[prodkey].name" /></div>
                         <div class="item"><span @click="deleteProduct(prodkey)" class="material-symbols-outlined">delete</span></div>                        
                         <div class="item">
-                            <select v-if="productStore > -1" v-model="products[prodkey].aisles[productStore]" :key="prodkey">
+                            <select :id="'prodStoreSelect_'+prodkey" v-if="productStore > -1" v-model="products[prodkey].aisles[productStore]" :key="prodkey">
                                 <option value="-1"></option>
                                 <option v-for="(aisle,aislekey) in stores[productStore].aisles" :value="aislekey">{{aisle.name}}</option>
                             </select>
@@ -69,7 +70,7 @@
 
                     </template>
 
-                    <div class="item"><input v-on:focus="addProduct()" type="text" value="" placeholder="New Product..." /></div>
+                    <div class="item"><input id="newProduct" v-on:focus="addProduct()" type="text" value="" placeholder="New Product..." /></div>
                     <div class="item"></div>
                     <div class="item"></div>
                     <div class="item"></div>
@@ -120,7 +121,7 @@
                         </template>
 
                         <div class="item"></div>
-                        <div class="item span2"><input v-on:focus="newRecipe()" type="text" value="" placeholder="New Recipe..." /></div>
+                        <div class="item span2"><input id="newRecipe" v-on:focus="newRecipe()" type="text" value="" placeholder="New Recipe..." /></div>
                         <div class="item"></div>
                         <div class="item"></div> 
 
@@ -167,7 +168,7 @@
                                     <div class="item"><span @click="deleteAisle(storekey, aislekey)" class="material-symbols-outlined">delete</span></div>
                                 </template>
                                 <div class="item"></div>
-                                <div class="item"><input v-on:focus="newAisle(storekey)" type="text" value="" placeholder="New Aisle..." /></div>
+                                <div class="item"><input :id="'newAisle_'+storekey" v-on:focus="newAisle(storekey)" type="text" value="" placeholder="New Aisle..." /></div>
                                 <div class="item"></div>
                                 <div class="item"></div>
                                 <div class="item"></div>
@@ -184,7 +185,7 @@
                     </template>
 
                     <div class="item"></div>
-                    <div class="item span2"><input v-on:focus="newStore" type="text" value="" placeholder="New Store..." /></div>
+                    <div class="item span2"><input id="newStore" v-on:focus="newStore" type="text" value="" placeholder="New Store..." /></div>
                     <div class="item"></div>
                     <div class="item"></div>   
                     <div class="item"></div>
@@ -271,14 +272,14 @@
                 <div id="settings" class="container" :class="{selected:openTab=='settings'}">
                     <div>
                         Paste your shopping list below and click <button @click="importShoppingList()">here</button>
-                        <textarea v-model="listimport"></textarea>
+                        <textarea id="listImportText" v-model="listimport"></textarea>
                     </div>
                     
                     <hr>
                     <div><a download="shoppinglistbackup.json" :href="backupURL">Download Shopping List Backup</a></div>
                     <hr>
                     <div>
-                        <input ref="backupupload" @change="uploadBackup($event)" type="file" /><button @click="loadDataFromBackup" :disabled="uploadedBackup == ''">Restore Uploaded Backup</button>
+                        <input id="loadBackupFile" ref="backupupload" @change="uploadBackup($event)" type="file" /><button @click="loadDataFromBackup" :disabled="uploadedBackup == ''">Restore Uploaded Backup</button>
                     </div>
                 </div>
             </div>
