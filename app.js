@@ -22,6 +22,11 @@ export default {
     },
     mounted() {
         this.loadFromLocalStorage();
+
+        // vh fix for mobile browser top bar
+        let vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+
         window.onresize = this.checkForMobileKeyboard;
     },
     updated() {
@@ -520,6 +525,12 @@ export default {
             this.products[prodID].onlist = true;
         },
         checkForMobileKeyboard(event) {
+
+            // vh fix for mobile browser top bar
+            let vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+
+
             if (window.innerHeight < this.pastHeight) {
                 this.keyboardPadding = this.pastMaxHeight - window.innerHeight;
                 //document.querySelector('html').style.marginBottom = this.keyboardPadding+"px";
