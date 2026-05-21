@@ -3,7 +3,7 @@
     display: grid;
     gap:5px;
 
-    /*padding: 5px;*/
+    padding-bottom: 5px;
 }
 
 .container {
@@ -55,6 +55,9 @@
 #shopping .item:nth-last-child(6n+5) {
     padding-left:5px;
 }
+.item {
+    height:100%;
+}
 
 .item select {
     width: 100%;
@@ -71,6 +74,7 @@ datalist option {
     width: calc(100% - 8px);
     height: calc(100% - 6px);
     text-transform: capitalize;
+    min-height: 18px;
 }
 .span2 {
     grid-column-end: span 2;
@@ -79,8 +83,8 @@ datalist option {
     grid-column: col-start / col-end;
     border-top: solid 1px;
 }
-.material-icons {
-    font-size: 20px;
+.material-symbols-outlined {
+    display: block;
 }
 
 button.material-symbols-outlined {
