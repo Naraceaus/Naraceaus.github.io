@@ -466,7 +466,18 @@ export default {
                 this.recipes[reckey].products[recprodkey].onlist = onlist;
             }
         },
+        removeProdFromList(prodkey, recKey="") {
+            if (recKey != "") {
+                this.recipes[recKey].products[prodkey].bought = false;
+                this.recipes[recKey].products[prodkey].onlist = false;
+            } else {
+                this.products[prodkey].bought=false;
+                this.products[prodkey].onlist=false;
+            }
+        },
         clearShoppingList() {
+            this.untickShoppingList();
+
             //clear recipe products
             for (let reckey in this.recipes) {
                 for (let recprodkey in this.recipes[reckey].products) {
@@ -479,6 +490,19 @@ export default {
                 this.products[prodkey].onlist = false;
             }
         
+        },
+        untickShoppingList() {
+            //clear recipe products
+            for (let reckey in this.recipes) {
+                for (let recprodkey in this.recipes[reckey].products) {
+                    this.recipes[reckey].products[recprodkey].bought = false;
+                }
+            }
+
+            //clear products
+            for (let prodkey in this.products) {
+                this.products[prodkey].bought = false;
+            }
         },
         importShoppingList() {
             this.clearShoppingList();

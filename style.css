@@ -55,6 +55,16 @@
 #shopping .item:nth-last-child(6n+5) {
     padding-left:5px;
 }
+
+.listbuttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    grid-column-end: span 5;
+    gap:20px;
+    padding:0 20px;
+}
+
 .item {
     height:100%;
 }
@@ -107,7 +117,7 @@ button.material-symbols-outlined {
 @media only screen and (max-width: 992px) {
     /* 36px is height of tabSelect, 2px is because of the dektopcontborder */
     .desktopcont {
-        height: calc(100% - 36px - 2px);
+        height: calc(100vh - 36px - 2px);
         overflow-y: scroll;
         border: solid 1px;
     }
@@ -124,7 +134,7 @@ button.material-symbols-outlined {
     }
     #tabSelect {
         display:grid;
-        grid-template-columns: repeat(6, 1fr);
+        grid-template-columns: repeat(5, 1fr);
         gap:0px;
         align-items:end;
     }
