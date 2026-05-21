@@ -11,11 +11,14 @@ export default {
             saveScheduled:undefined,
             listimport:"",
             uploadedBackup:"",
-            selectedSort:"Default"
+            selectedSort:"Default",
+            pastHeight:window.innerHeight,
+            keyboardPadding:""
         }
     },
     mounted() {
         this.loadFromLocalStorage();
+        window.onresize = this.checkForMobileKeyboard;
     },
     updated() {
         if (this.inputFocus != "") {
@@ -164,7 +167,6 @@ export default {
             return autolist;
         },
         saveDataString() {
-            console.log('genning save data');
             let data = {};
             for (const field in saveFields) {
                 data[field] = this[field];
@@ -199,7 +201,6 @@ export default {
 
                 if (_this.productStore >= 0) {
                     let currentStore = _this.stores[_this.productStore];
-                    console.log(currentStore.aislesOrder);
                     if (_this.products[a].aisles[_this.productStore] > -1) {
                         let Aaisle = parseInt(_this.products[a].aisles[_this.productStore]);
                         aisleSortA = currentStore.aislesOrder.indexOf(Aaisle);
@@ -209,9 +210,6 @@ export default {
                         aisleSortB = currentStore.aislesOrder.indexOf(Baisle);
                     }
                 }
-                    
-                console.log(_this.products[a].name,aisleSortA, _this.products[b].name,aisleSortB );
-                console.log(_this.products[a].aisles, _this.products[b].aisles );
 
                 let difference = aisleSortA-aisleSortB;
 
@@ -230,7 +228,6 @@ export default {
         saveData() {
 
             localStorage.setItem("listData", this.saveDataString);
-            console.log('data saved');
         },
         loadFromLocalStorage() {
             let dataText = localStorage.getItem("listData");
@@ -271,7 +268,6 @@ export default {
             this.openTab = '';
         },
         uploadBackup(event) {
-            console.log(event);
             const reader = new FileReader();
             let _this = this;
             reader.addEventListener("load", () => {
@@ -493,6 +489,15 @@ export default {
         addProductToListByName(name) {
             let prodID = this.addProduct(name,false);
             this.products[prodID].onlist = true;
+        },
+        checkForMobileKeyboard(event) {
+            console.log('checking for mobile keyboard');
+            if (window.innerHeight < this.pastMaxHeight) {
+                this.keyboardPadding = this.pastMaxHeight - window.innerHeight;
+                document.querySelector('html').style.marginBottom = this.keyboardPadding+"px";
+            } else {
+                this.pastMaxHeight = window.innerHeight;
+            }
         }
     }
 }
