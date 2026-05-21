@@ -28,11 +28,15 @@
                     <button @click="openTab = 'shopping'" :class="{selected:openTab=='shopping'}">Shopping</button>
                     <button @click="openTab = 'settings'" :class="{selected:openTab=='settings'}">Settings</button>
             </div>
-
             <div class="desktopcont">
                 <div id="products" class="container" :class="{selected:openTab=='products' || openTab==''}">
                     <div class="grid-header">
-                        <div class="item">Product</div>
+                        <div class="item">Sort by
+                            <select class="sortSelect" v-model="selectedSort">
+                                <option v-for="(sort, sortkey) in productSortList" :value="sortkey">{{sortkey}}</option>
+                            </select>
+
+                        </div>
                         <div class="item"><span class="material-symbols-outlined">delete</span></div>
                         <div class="item">
                             <select v-model="productStore">
@@ -45,22 +49,22 @@
                     </div>
 
 
-                    <template v-for="(product,prodkey) in products">
-                        <div class="item"><input  @change="removeDuplicateProduct(prodkey)" :id="'product_'+prodkey" type="text" v-model="product.name" /></div>
+                    <template v-for="prodkey in productSortList[selectedSort]">
+                        <div class="item"><input  @change="removeDuplicateProduct(prodkey)" :id="'product_'+prodkey" type="text" v-model.lazy="products[prodkey].name" /></div>
                         <div class="item"><span @click="deleteProduct(prodkey)" class="material-symbols-outlined">delete</span></div>                        
                         <div class="item">
-                            <select v-if="productStore > -1" v-model="product.aisles[productStore]">
+                            <select v-if="productStore > -1" v-model="products[prodkey].aisles[productStore]" :key="prodkey">
                                 <option value="-1"></option>
                                 <option v-for="(aisle,aislekey) in stores[productStore].aisles" :value="aislekey">{{aisle.name}}</option>
                             </select>
                         </div>
 
 
-                        <div v-if="!product.weekly" class="item"><button @click="product.weekly = true" class="material-symbols-outlined">check_box_outline_blank</button></div>
-                        <div v-if="product.weekly" class="item"><span @click="product.weekly = false" class="material-symbols-outlined">check_box</span></div>
+                        <div v-if="!products[prodkey].weekly" class="item"><button @click="products[prodkey].weekly = true" class="material-symbols-outlined">check_box_outline_blank</button></div>
+                        <div v-if="products[prodkey].weekly" class="item"><span @click="products[prodkey].weekly = false" class="material-symbols-outlined">check_box</span></div>
                         
-                        <div v-if="!product.onlist" class="item"><span @click="product.onlist = true" class="material-symbols-outlined">check_box_outline_blank</span></div>
-                        <div v-if="product.onlist" class="item"><span @click="product.onlist = false" class="material-symbols-outlined">check_box</span></div>
+                        <div v-if="!products[prodkey].onlist" class="item"><span @click="products[prodkey].onlist = true" class="material-symbols-outlined">check_box_outline_blank</span></div>
+                        <div v-if="products[prodkey].onlist" class="item"><span @click="products[prodkey].onlist = false" class="material-symbols-outlined">check_box</span></div>
 
 
                     </template>

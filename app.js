@@ -10,7 +10,8 @@ export default {
             inputFocus:"",
             saveScheduled:undefined,
             listimport:"",
-            uploadedBackup:""
+            uploadedBackup:"",
+            selectedSort:"Default"
         }
     },
     mounted() {
@@ -178,16 +179,51 @@ export default {
             let json = this.saveDataString;
             const blob = new Blob([json], { type: 'text/json' });
             const url = window.URL.createObjectURL(blob);
-/*
-            const link = document.createElement('a')
-            link.href = url
-            link.click()
 
-            window.URL.revokeObjectURL(url)
-
-            link.remove();
-*/
             return url;
+        },
+        productSortList() {
+            let _this = this;
+            let prodSort = {
+                Default:Object.keys(this.products),
+                Name:Object.keys(this.products),
+                Location:Object.keys(this.products)
+            };
+            prodSort.Name.sort(function (a,b) {
+                return sortAlphabetical(_this.products[a].name, _this.products[b].name);
+            });
+            prodSort.Location.sort(function(a,b) {
+
+                let aisleSortA = -1;
+                let aisleSortB = -1;
+
+                if (_this.productStore >= 0) {
+                    let currentStore = _this.stores[_this.productStore];
+                    console.log(currentStore.aislesOrder);
+                    if (_this.products[a].aisles[_this.productStore] > -1) {
+                        let Aaisle = parseInt(_this.products[a].aisles[_this.productStore]);
+                        aisleSortA = currentStore.aislesOrder.indexOf(Aaisle);
+                    }
+                    if (_this.products[b].aisles[_this.productStore] > -1) {
+                        let Baisle = parseInt(_this.products[b].aisles[_this.productStore]);
+                        aisleSortB = currentStore.aislesOrder.indexOf(Baisle);
+                    }
+                }
+                    
+                console.log(_this.products[a].name,aisleSortA, _this.products[b].name,aisleSortB );
+                console.log(_this.products[a].aisles, _this.products[b].aisles );
+
+                let difference = aisleSortA-aisleSortB;
+
+
+                if (difference == 0) {
+                    return sortAlphabetical(_this.products[a].name, _this.products[b].name);
+                }
+
+                return difference;
+            });
+
+            return prodSort;
         }
     },
     methods: {
@@ -290,8 +326,7 @@ export default {
             let newID = Math.max.apply(null,Object.keys(this.stores[storekey].aisles).concat([-1]))+1;
             this.stores[storekey].aislesOrder.push(newID);
             this.stores[storekey].aisles[newID] = {
-                name:"",
-                priority:""
+                name:""
             }
             
 
