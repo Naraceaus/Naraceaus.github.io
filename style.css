@@ -114,11 +114,23 @@ button.material-symbols-outlined {
     }
 }
 
+
+html {
+    height: -webkit-fill-available;
+}
+
+body {
+    height: calc(100% - 8px - 8px);
+}
+
+#app {
+    height: 100%;
+}
+
 @media only screen and (max-width: 992px) {
     /* 36px is height of tabSelect, 2px is because of the dektopcontborder */
     .desktopcont {
-        height: calc(100vh - 36px - 16px - 2px); /* Fallback for browsers that do not support Custom Properties */
-        height: calc(var(--vh, 1vh) * 100 - 36px - 16px - 2px);
+        height: calc(100% - 36px - 2px);
         overflow-y: scroll;
         border: solid 1px;
     }
