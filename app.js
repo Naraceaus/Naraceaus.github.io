@@ -13,6 +13,7 @@ export default {
             uploadedBackup:"",
             selectedSort:"Default",
             pastHeight:window.innerHeight,
+            pastMaxHeight:window.innerHeight,
             keyboardPadding:""
         }
     },
@@ -491,13 +492,18 @@ export default {
             this.products[prodID].onlist = true;
         },
         checkForMobileKeyboard(event) {
-            console.log('checking for mobile keyboard');
-            if (window.innerHeight < this.pastMaxHeight) {
+            console.log('checking for mobile keyboard',window.innerHeight , this.pastMaxHeight);
+            if (window.innerHeight < this.pastHeight) {
                 this.keyboardPadding = this.pastMaxHeight - window.innerHeight;
                 document.querySelector('html').style.marginBottom = this.keyboardPadding+"px";
-            } else {
+                
+            } 
+            
+            if (this.pastMaxHeight < window.innerHeight) {
                 this.pastMaxHeight = window.innerHeight;
             }
+
+            this.pastHeight = window.innerHeight;
         }
     }
 }
