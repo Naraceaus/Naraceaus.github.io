@@ -197,8 +197,9 @@ export default {
             });
             prodSort.Location.sort(function(a,b) {
 
-                let aisleSortA = -1;
-                let aisleSortB = -1;
+                //hopefully they don't have more than 1000000 aisles in a single store
+                let aisleSortA = 1000000;
+                let aisleSortB = 1000000;
 
                 if (_this.productStore >= 0) {
                     let currentStore = _this.stores[_this.productStore];
@@ -492,7 +493,6 @@ export default {
             this.products[prodID].onlist = true;
         },
         checkForMobileKeyboard(event) {
-            console.log('checking for mobile keyboard',window.innerHeight , this.pastMaxHeight);
             if (window.innerHeight < this.pastHeight) {
                 this.keyboardPadding = this.pastMaxHeight - window.innerHeight;
                 document.querySelector('html').style.marginBottom = this.keyboardPadding+"px";
@@ -523,6 +523,16 @@ const saveFields = {
 };
 
 function sortAlphabetical(a,b) {
+    if (a != b) {
+        // empty strings must be at the bottom (for better new product UI flow)
+        if (a == "") {
+            return 1;
+        }
+         if (b == "") {
+            return -1;
+        }
+    }
+
     const nameA = a.toUpperCase(); // ignore upper and lowercase
     const nameB = b.toUpperCase(); // ignore upper and lowercase
     if (nameA < nameB) {
