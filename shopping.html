@@ -24,17 +24,17 @@
         <div id="app">
 
             <div id="tabSelect">
-                    <button @click="openTab = 'products'" :class="{selected:openTab=='products' || openTab==''}">Products</button>
-                    <button @click="openTab = 'recipes'" :class="{selected:openTab=='recipes'}">Recipes</button>
-                    <button @click="openTab = 'stores'" :class="{selected:openTab=='stores'}">Stores</button>
-                    <button @click="openTab = 'shopping'" :class="{selected:openTab=='shopping'}">Shopping</button>
-                    <button @click="openTab = 'settings'" :class="{selected:openTab=='settings'}">Settings</button>
+                    <button @click="settings.openTab = 'products'" :class="{selected:settings.openTab=='products' || settings.openTab==''}">Products</button>
+                    <button @click="settings.openTab = 'recipes'" :class="{selected:settings.openTab=='recipes'}">Recipes</button>
+                    <button @click="settings.openTab = 'stores'" :class="{selected:settings.openTab=='stores'}">Stores</button>
+                    <button @click="settings.openTab = 'shopping'" :class="{selected:settings.openTab=='shopping'}">Shopping</button>
+                    <button @click="settings.openTab = 'settings'" :class="{selected:settings.openTab=='settings'}">Settings</button>
             </div>
             <div class="desktopcont">
-                <div id="products" class="container" :class="{selected:openTab=='products' || openTab==''}">
+                <div id="products" class="container" :class="{selected:settings.openTab=='products' || settings.openTab==''}">
                     <div class="grid-header">
                         <div class="item">Sort by
-                            <select id="selectSort" class="sortSelect" v-model="selectedSort">
+                            <select id="selectSort" class="sortSelect" v-model="settings.selectedSort">
                                 <option v-for="(sort, sortkey) in productSortList" :value="sortkey">{{sortkey}}</option>
                             </select>
 
@@ -51,7 +51,7 @@
                     </div>
 
 
-                    <template v-for="(prodkey, prodkeyindex) in productSortList[selectedSort]">
+                    <template v-for="(prodkey, prodkeyindex) in productSortList[settings.selectedSort]">
                         <div class="item"><input :tabindex="prodkeyindex+1" @change="removeDuplicateProduct(prodkey)" :id="'product_'+prodkey" type="text" v-model.lazy="products[prodkey].name" /></div>
                         <div class="item"><span @click="deleteProduct(prodkey)" class="material-symbols-outlined">delete</span></div>                        
                         <div class="item">
@@ -71,7 +71,7 @@
 
                     </template>
 
-                    <div class="item"><input :tabindex="productSortList[selectedSort].length+1" id="newProduct" v-on:focus="addProduct()" type="text" value="" placeholder="New Product..." /></div>
+                    <div class="item"><input :tabindex="productSortList[settings.selectedSort].length+1" id="newProduct" v-on:focus="addProduct()" type="text" value="" placeholder="New Product..." /></div>
                     <div class="item"></div>
                     <div class="item"></div>
                     <div class="item"></div>
@@ -79,7 +79,7 @@
 
                 </div>
 
-                <div id="recipes" class="container" :class="{selected:openTab=='recipes'}">
+                <div id="recipes" class="container" :class="{selected:settings.openTab=='recipes'}">
                     <div class="grid-header">
                         <div class="item"><span class="material-symbols-outlined">add</span></div>
                         <div class="item span2">Recipe</div>
@@ -129,7 +129,7 @@
 
                 </div>
                 
-                <div id="stores" class="container" :class="{selected:openTab=='stores'}">
+                <div id="stores" class="container" :class="{selected:settings.openTab=='stores'}">
                     <div class="grid-header">
                         <div class="item"><span class="material-symbols-outlined">add</span></div>
                         <div class="item span2">Name</div>
@@ -195,7 +195,7 @@
              
                 </div>
 
-                <div id="shopping" class="container" :class="{selected:openTab=='shopping'}">
+                <div id="shopping" class="container" :class="{selected:settings.openTab=='shopping'}">
 
                     <div class="grid-header">
                         <div class="item">Product</div>
@@ -270,7 +270,7 @@
                 </div>
 
 
-                <div id="settings" class="container" :class="{selected:openTab=='settings'}">
+                <div id="settings" class="container" :class="{selected:settings.openTab=='settings'}">
                     <div>
                         Paste your shopping list below and click <button @click="importShoppingList()">here</button>
                         <textarea id="listImportText" v-model="listimport"></textarea>
@@ -281,6 +281,9 @@
                     <hr>
                     <div>
                         <input id="loadBackupFile" ref="backupupload" @change="uploadBackup($event)" type="file" /><button @click="loadDataFromBackup" :disabled="uploadedBackup == ''">Restore Uploaded Backup</button>
+                    </div>
+                    <div>
+                        New products are automatically added to the shopping list: <input type="checkbox" id="newProdOnList" v-model="settings.newProdOnList" />
                     </div>
                 </div>
             </div>

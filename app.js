@@ -1,7 +1,6 @@
 export default {
     data() {
         return {
-            openTab:'',
             productStore:-1,
             products:{},
             recipes:{},
@@ -11,10 +10,14 @@ export default {
             saveScheduled:undefined,
             listimport:"",
             uploadedBackup:"",
-            selectedSort:"Default",
             pastHeight:window.innerHeight,
             pastMaxHeight:window.innerHeight,
-            keyboardPadding:""
+            keyboardPadding:"",
+            settings:{
+                openTab:'',
+                selectedSort:"Default",
+                newProdOnList:false
+            }
         }
     },
     mounted() {
@@ -267,7 +270,7 @@ export default {
                 this.$refs.backupupload.value = "";
             }
             this.uploadedBackup = "";
-            this.openTab = '';
+            this.settings.openTab = '';
         },
         uploadBackup(event) {
             const reader = new FileReader();
@@ -355,7 +358,7 @@ export default {
                     name:name.toLowerCase(),
                     aisles:{},
                     weekly:false,
-                    onlist:false,
+                    onlist:this.settings.newProdOnList,
                     bought:false
                 }
                 if (autofocus) {
@@ -513,7 +516,11 @@ export default {
 
 
 const saveFields = {
-    openTab:'',
+    settings:{
+        openTab:'',
+        selectedSort:"Default",
+        newProdOnList:false
+    },
     productStore:-1,
     products:{},
     recipes:{},
