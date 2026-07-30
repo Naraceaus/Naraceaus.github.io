@@ -524,6 +524,14 @@ export default {
             let prodID = this.addProduct(name,false);
             this.products[prodID].onlist = true;
         },
+        submitListSearch(event) {
+            let prodName = event.target.value;
+            if (prodName.length > 0) {
+                this.addProductToListByName(prodName);
+                event.target.value = "";
+                this.inputFocus = event.target.id;
+            }
+        },
         checkForMobileKeyboard(event) {
 
             // vh fix for mobile browser top bar

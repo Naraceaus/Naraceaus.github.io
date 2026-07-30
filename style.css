@@ -1,7 +1,7 @@
 
 .container {
     display: grid;
-    gap:5px;
+    /*gap:5px;*/
 
     padding-bottom: 5px;
 }
@@ -11,16 +11,16 @@
 }
 
 #products {
-    grid-template-columns: [col-start] 1fr 24px 1fr 24px 24px [col-end];
+    grid-template-columns: [col-start] 1fr 29px 1fr 29px 29px [col-end];
 }
 #recipes {
-    grid-template-columns: [col-start] 24px 24px 1fr 24px 24px [col-end];
+    grid-template-columns: [col-start] 29px 29px 1fr 29px 29px [col-end];
 }
 #stores {
-    grid-template-columns: [col-start] 24px 24px 1fr 24px 24px 24px 24px [col-end];
+    grid-template-columns: [col-start] 29px 29px 1fr 29px 29px 29px 29px [col-end];
 }
 #shopping {
-    grid-template-columns: [col-start] 1fr 24px 24px 1fr 24px[col-end];
+    grid-template-columns: [col-start] 1fr 29px 29px 1fr 29px[col-end];
 }
 
 .aisles, .ingredients {
@@ -32,17 +32,30 @@
     padding: 5px 0px;
 }
 
-.grid-header {
+.greyed {
+    background-color: lightgrey;
+}
+
+.grid-header, .grid-row {
     display: grid;
     gap:5px;
     grid-column: col-start / col-end;
     grid-template-columns: subgrid;
-    padding: 5px 0px;
+    padding: 5px 5px 0 5px;
+
+}
+
+#shopping .grid-row {
+    padding: 5px;
+}
+
+.grid-header {
     position: sticky;
     top:0px;
     background: white;
     align-items: center;
     background: darkgray;
+    padding: 5px;
 }
 
 
@@ -52,8 +65,13 @@
 
 
 
-#shopping .item:nth-last-child(6n+5) {
-    padding-left:5px;
+.listsearch {
+    display: grid;
+    grid-template-columns: 1fr;
+}
+
+#addToList {
+    grid-column-start: 2;
 }
 
 .listbuttons {
@@ -77,8 +95,8 @@
     width: initial;
 }
 
-datalist option {
-        text-transform: capitalize;
+datalist option, .capitalize {
+    text-transform: capitalize;
 }
 .item input {
     width: calc(100% - 8px);
