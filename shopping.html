@@ -88,7 +88,7 @@
                             <template v-for="shopitem in shoppingList[storekey][aislekey]">
 
                                 <div class="fullwidth"></div>
-                                <div class="grid-row">
+                                <div class="grid-row" :class="{greyed: shopitem.recKey >= 0 && recipes[shopitem.recKey].products[shopitem.recprodkey].bought || products[shopitem.prodkey].bought}">
                                     <div class="item">{{products[shopitem.prodkey].name}}</div>
                                     <div class="item">
                                         <span v-if="shopitem.recKey >= 0" class="material-symbols-outlined">chef_hat</span>
@@ -101,7 +101,7 @@
                                     <div class="item">{{stores[storekey].name+", "+stores[storekey].aisles[aislekey].name}}</div>
                                     <div class="item">
                                         <template v-if="shopitem.recKey >= 0">
-                                            <span v-if="recipes[shopitem.recKey].products[shopitem.recprodkey].bought" @click="recipes[shopitem.recKey].products[shopitem.prodkey].bought=false" class="material-symbols-outlined">check_box</span>
+                                            <span v-if="recipes[shopitem.recKey].products[shopitem.recprodkey].bought" @click="recipes[shopitem.recKey].products[shopitem.recprodkey].bought=false" class="material-symbols-outlined">check_box</span>
                                             <span v-else @click="recipes[shopitem.recKey].products[shopitem.recprodkey].bought=true" class="material-symbols-outlined">check_box_outline_blank</span>
                                         </template>
                                         <template v-else>
